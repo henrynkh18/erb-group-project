@@ -1,4 +1,4 @@
-from .product import Products
+from .product import Product
 from .category import Category
-from  .customer import  Customer
-from  .orders import  Order
+from .customer import Customer
+from .orders import Order

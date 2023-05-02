@@ -55,12 +55,12 @@ class Signup (View):
             error_message = 'Last Name must be 3 char long or more'
         elif not customer.phone:
             error_message = 'Enter your Phone Number'
-        elif len (customer.phone) < 10:
-            error_message = 'Phone Number must be 10 char Long'
+        elif len (customer.phone) < 8:
+            error_message = 'Phone Number must be 8 int Long'
         elif len (customer.password) < 5:
-            error_message = 'Password must be 5 char long'
+            error_message = 'Password must be at least 5 char long'
         elif len (customer.email) < 5:
-            error_message = 'Email must be 5 char long'
+            error_message = 'Email must be at least 5 char long'
         elif customer.isExists ():
             error_message = 'Email Address Already Registered..'
         # saving

@@ -3,7 +3,6 @@ from django.contrib.auth.hashers import  check_password
 from store.models.customer import Customer
 from django.views import View
 
-
 class Login(View):
     return_url = None
 
@@ -25,7 +24,7 @@ class Login(View):
                     return HttpResponseRedirect (Login.return_url)
                 else:
                     Login.return_url = None
-                    return redirect ('homepage')
+                    return redirect ('home')
             else:
                 error_message = 'Invalid !!'
         else:

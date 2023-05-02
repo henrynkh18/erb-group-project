@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load humanize %}
+{% load cart %}
+{% load custom_filter %}
+{% load static %} 
+
+<!-- body -->
+
+{% if messages %}
+{% for message in messages %}
+  <div class="container-fluid p-0">
+    <div class="alert {{ message.tags }} alert-dismissible fade show" role="alert" >
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="True">&times;</span>
+      </button>
+  {% if 'search' in message.tags %} 
+    {{ message|safe }}
+  {% else %}
+    {{ message }}
+  {% endif %}
+    </div>
+  </div>
+{% endfor %}
+{% endif %}
+
+<div class="container bg-light mt-5 pt-5 pb-5">
+
+  <div class="row">
+      <div class="col">
+        <div class="jumobotron text-center"><br><br>
+          <img src="/media/{{producttype.image}}" alt="Product Image" width="100%" height="100%">
+        </div>
+        
+      </div>
+      <div class="col">
+       <p>
+        <a href="{% url 'store' %}">All Products</a> > 
+        <a href="/products/{{producttype.category.id}}">
+          {{producttype.category.super_category.name}} / {{producttype.category.name}}
+        </a>
+      </p>
+        <h1 class="display-4" style="font-family:'DM Serif Display', Times, serif">
+          {{producttype.name}}
+        </h1>
+        <p class="lead display-5">Price: ${{producttype.price|intcomma}}</p>
+
+        <a href="" style="font-size:70%">Size Chart Guide</a><br>
+        <div class="form-check form-check-inline">
+          <form action="{{request.path}}#" method="post">
+              {% csrf_token %}
+
+              <select class="browser-default custom-select" name="product">
+                  <option selected disabled>Select a size</option>
+                  {% for product in products %} 
+                    {% if product.stock_on_hand <= 0 %}
+                      <option name="product" 
+                              id="product_{{product.id}}" 
+                              value="{{product.id}}"
+                              disabled>{{product.size}} <p style="color:red;">(Out of Stock)</p></option>                   
+                    {% else %}
+                      <option name="product" 
+                              id="product_{{product.id}}" 
+                              value="{{product.id}}">{{product.size}}</option>
+                    {% endif %}
+                  {% endfor %}
+              </select>
+
+              <input type="submit" 
+                    class="float-right btn btn-dark form-control mt-2" 
+                    value="Add To Cart">
+          </form>
+        </div>
+
+        <hr>
+        {% if producttype.description %}
+        <p>{{producttype.description}}</p>
+        {% endif %}
+
+      </div>
+  
+  </div>
+
+</div>
+
+
+{% endblock %}

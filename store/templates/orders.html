@@ -2,19 +2,21 @@
 
 
 {% block content %}
+{% load humanize %}
 {% load cart %}
 {% load custom_filter %}
 <div class="container">
    <div class="border rounded p-4 m-4">
         <p class="display-4 pl-4 ml-4">Your Orders</p>
         <hr>
-        <table class="table">
+        <table class="table" style="font-size:90%">
             <thead>
                 <tr>
-                    <th>Sno.</th>
-                    <th>Image</th>
+                    <th>Order#</th>
+                    <th>Order Time</th>
                     <th>Product</th>
-                    <th>Date</th>
+                    <th></th>
+                    <th>Size</th>
                     <th>Price</th>
                     <th>Quantity</th>
                     <th>Total</th>
@@ -25,13 +27,23 @@
                 
                 {% for order in orders %}
                 <tr>
-                    <td>{{forloop.counter}}</td>
-                    <td><img style="height: 80px;" class="rounded-circle" src="{{order.product.image.url}}" alt=""></td>
-                    <td>{{order.product.name}}</td>
-                    <td>{{order.date}}</td>
-                    <td>{{order.price|currency}}</td>
+                    <td>{{order.id}}</td>
+                    <td>{{order.datetime}}</td>
+                    <td>
+                        <a href="{% url 'product_detail' pk=order.product.name.id %}" >
+                        {{order.product.name}}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{% url 'product_detail' pk=order.product.name.id %}" >
+                            <img style="height: 50px;" class="rounded" 
+                            src="{{order.product.name.image.url}}" alt="">
+                        </a>
+                    </td>
+                    <td>{{ order.product.size.name }}</td>
+                    <td>${{ order.price|intcomma }}</td>
                     <td>{{order.quantity}}</td>
-                    <td>{{order.quantity|multiply:order.price|currency}}</td>
+                    <td>${{order.quantity|multiply:order.price|intcomma}}</td>
                     {% if order.status %}
                     <td><small class="badge badge-success">Completed</small></td>
                     {%else%}
@@ -47,9 +59,6 @@
        
    </div>
 </div>
-
-
-
 
 
 {% endblock %}

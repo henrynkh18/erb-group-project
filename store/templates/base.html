@@ -1,3 +1,5 @@
+{% load static %}
+{% load humanize %}
 <!doctype html>
 <html lang="en">
 
@@ -6,72 +8,123 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
+  <link rel="stylesheet" href="{% static 'css/eshop.css' %}">
   <!-- Bootstrap CSS -->
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
     integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
-  <title>E-commerce Website</title>
+  <title>Sport Styling</title>
 
-  <style>
-    nav{
-      background-color: green;
-    }
-    .one-edge-shadow {
-              box-shadow: 0 8px 2px -5px rgb(246, 245, 245);
-}
-.display-8{
-  font-weight: 200;
-  font-size: 30px;
-  font-colour: $teal-200;
-}
-  </style>
+  <!-- google fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Pacifico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=DM+Serif+Display">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT+Sans+Narrow">
+  
+  <!-- google icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
 
 <body>
   <!-- navbar -->
 
-<nav class="one-edge-shadow
+<nav class="
   navbar navbar-light
   sticky-top navbar 
   navbar-expand-lg
   text-white">
-    <a class="navbar-brand ms-3 text-dark " href="/">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-
-    <img src="https://www.freepnglogos.com/uploads/shopping-cart-png/shopping-cart-svg-png-icon-download-28.png" style="width:50px;height:50px,color:text-light;">E-Commerce</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-      aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand ms-3"
+      style="font-family:'Pacifico', sans-serif; font-size: 200%; color: #263A29;"
+      href="{% url 'home' %}">
+      Sport Styling
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+      data-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="collapse navbar-collapse" 
+    style="font-family: 'Poppins', sans-serif;" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="/store">Store <span class="sr-only">(current)</span></a>
+
+        <!-- <li class="nav-item dropdown active">
+          <a class="nav-link" href="{% url 'store' %}">All Products</a>
+        </li> -->
+
+        <!-- Category -->
+        <li class="nav-item dropdown active">
+          <a class="nav-link dropdown" data-toggle="dropdown" href="#">Women</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/1">Top</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/2">Bottom</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/3">Socks</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/4">Shoes</a>
+          </div>
         </li>
 
-          </ul>
-
-
-
-
-      <ul class=" navbar-nav my-2 my-lg-0">
-
-        <li class="nav-item active">
-          <a class="nav-link" href="/cart">Cart 
-            <span class="badge badge-success">{{request.session.cart.keys|length}}</span>
-            <span class="sr-only">(current)</span></a>
+        <li class="nav-item dropdown active">
+          <a class="nav-link dropdown" data-toggle="dropdown" href="#">Men</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/5">Top</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/6">Bottom</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/7">Socks</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/8">Shoes</a>
+          </div>
         </li>
+
+        <li class="nav-item dropdown active">
+          <a class="nav-link dropdown" data-toggle="dropdown" href="#">Accessories</a>
+          <div class="dropdown-menu">
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/9">Headwear</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/10">Bag</a>
+            <a class="dropdown-item" style="color:#41644A;"
+            href="/products/11">Equipment</a>
+          </div>
+        </li>
+
+        <li class="nav-item dropdown active">
+          <a class="nav-link" href="{% url 'stylequiz' %}">Style Quiz</a>
+        </li>
+
+      </ul>
+
+
+      <form class="form-inline my-3 my-lg-0 ml-auto" action="{% url 'store_undercat' cat_pk=0 %}">
+        {% csrf_token %}
+        <input class="form-control form-control-sm mr-1 w-75" type="text" placeholder="Find Products" name="search">
+        <button class="btn btn-sm themebg3" type="submit">
+          <span class="material-icons md-18 md-light">search</span>
+        </button>
+      </form>
+
+      <ul class="navbar-nav my-3 my-lg-0">
 
         {% if request.session.customer %}
         
-        <li class="nav-item active ">
+        <li class="nav-item active">
           <a class="nav-link" href="/orders">Orders<span class="sr-only">(current)</span></a>
         </li>
-        <li class="nav-item active ">
+        <li class="nav-item active">
           <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a>
         </li>
+
         {% else %}
        
         <li class="nav-item active">
@@ -82,6 +135,12 @@
         </li>
         {% endif %}
 
+        <li class="nav-item active pl-2">
+          <a class="nav-link" href="/cart">
+            <span class="material-icons md-24 item">shopping_bag</span> 
+            <span class="notify-badge text-white themebg4">{{request.session.cart.keys|length}}</span>
+            <span class="sr-only">(current)</span></a>
+        </li>
 
       </ul>
 
@@ -89,6 +148,7 @@
     </div>
   </nav>
   <!---->
+
   {% block content %}{% endblock %}
 
   <!-- Optional JavaScript -->
