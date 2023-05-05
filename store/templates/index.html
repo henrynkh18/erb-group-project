@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load humanize %}
+{% load cart %}
+{% load custom_filter %}
+{% load static %} 
+
+<!-- body -->
+
+<div class="jumbotron square bg-dark text-white text-center overlay-dark">
+    <h1 class="display-4" style="font-family:'DM Serif Display', Times, serif">
+      Discover sport styles you love.<br>
+      Just get easier.
+    </h1>
+    <hr class="my-4">
+    <p class="lead">
+      <a class="btn themebg4 text-white btn-lg" 
+      style="font-family:'DM Serif Display', Times, serif"
+      href="#" role="button">
+      TAKE YOUR STYLE QUIZ
+      </a>
+    </p>
+  </div>
+
+
+{% endblock %}

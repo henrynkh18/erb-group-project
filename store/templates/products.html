@@ -1,0 +1,212 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load humanize %}
+{% load cart %}
+{% load custom_filter %}
+{% load static %}
+
+<!-- body -->
+
+{% if messages %}
+{% for message in messages %}
+	<div class="container-fluid p-0">
+		<div class="alert {{ message.tags }} alert-dismissible lead" role="alert" >
+			<button type="button" class="close" data-dismiss="alert" aria-label="Close">
+				<span aria-hidden="True">&times;</span>
+			</button>
+	{% if 'search' in message.tags %} 
+		{{ message|safe }}
+	{% else %}
+		{{ message }}
+	{% endif %}
+		</div>
+	</div>
+{% endfor %}
+{% endif %}
+
+
+<div class="container-fluid mt-3 ">
+
+	<div class="row">		
+
+		<!-- filter -->
+		<div id="accordion" class="ml-2 mr-2 col-sm mb-5"
+		 style="font-family:'PT Sans Narrow', Geneva, Verdana, sans-serif;">
+		 <form action="{{request.path}}" class="" method="post" id="filterform">
+			{% csrf_token %}
+			<input type="submit" class="btn btn-block btn-light" value="APPLY FILTER">
+			<a class="btn btn-block btn-light" href="{{request.path}}" role="button">CLEAR FILTER</a>
+			<hr>
+			<div class="card">
+				<div class="card-header">
+				  <a class="collapsed card-link lead text-dark" data-toggle="collapse" href="#collapseOne">
+					SPORT
+				  </a>
+				</div>
+				<div id="collapseOne" class="collapse show" data-parent="#accordion">
+				  <div class="card-body">
+					<div class="row">
+
+					  {% for sport in sports %}
+						<div class="col-5">
+							<input type="Checkbox"
+									name="sport_{{sport.id}}" 
+									id="sport_{{sport.id}}"
+									value="{{sport.id}}"
+									{% if sportFlag|list_item:forloop.counter0 %}
+									checked
+									{% endif %}>
+							<label>{{sport.name}}</label>											
+						</div>
+					  {% endfor %}
+
+					</div>
+				  </div>
+				</div>
+			  </div>
+
+			<div class="card">
+			  <div class="card-header">
+				<a class="card-link lead text-dark" data-toggle="collapse" href="#collapseTwo">
+				  COLOR
+				</a>
+			  </div>
+			  <div id="collapseTwo" class="collapse show" data-parent="#accordion">
+				<div class="card-body">
+					<div class="row">
+					{% for color in colors %}
+					<div class="col-4">
+						<input type="Checkbox" 
+							name="color_{{color.id}}" 
+							id="color_{{color.id}}"
+							value="{{color.id}}"
+							{% if colorFlag|list_item:forloop.counter0 %}
+							checked
+							{% endif %}>
+
+						{% if color.id == 1 %}
+							<label
+							class="badge border text-white-0" 
+							title="{{color.name}}">Other</label>
+						{% else %}
+							<label
+							class="badge border text-white-0" 
+							style="background-color:{{ color.name }}"
+							title="{{color.name}}">&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;</label>
+						{% endif %}
+					</div>
+					{% endfor %}
+					</div>
+				</div>
+			  </div>
+			</div>
+		  
+			<div class="card">
+			  <div class="card-header">
+				<a class="collapsed card-link lead text-dark" data-toggle="collapse" href="#collapseThree">
+				  PRICE
+				</a>
+			  </div>
+			  <div id="collapseThree" class="collapse show" data-parent="#accordion">
+				<div class="card-body">
+
+					<div class="range">
+						<div class="range-slider">
+						  <span class="range-selected"></span>
+						</div>
+						<div class="range-input">
+						  <input type="range" class="min" min="0" max="1500" value="{{minPrice}}" step="50">
+						  <input type="range" class="max" min="0" max="1500" value="{{maxPrice}}" step="50">
+						</div>
+
+						<div class="range-price">   
+							   
+							<label for="min">Min:</label>
+							<input type="number" name="min" value="{{minPrice}}">      
+							<label for="max">Max:</label>
+							<input type="number" name="max" value="{{maxPrice}}">
+						
+						</div>
+					  </div> 
+
+				</div>
+			  </div>
+			</div>
+		  
+		</div>
+
+		<!-- all products -->
+		<div id='products' class="col-lg-9 ml-4 mr-auto">
+			<div class="row mr-auto">
+				{% for product in products %}
+					<div class="card mr-auto mb-3" id={{product.id}} style="width: 16rem;">
+						<a href="/product_detail/{{product.id}}">
+						<img class="card-img-top" src="{{product.image.url}}" alt="Card image cap">
+						</a>
+						<div class="card-body">
+							<p class="card-title">{{ product.name | title }}</p>
+							<p class="card-text"><b>${{ product.price | intcomma }}</b></p>
+						</div>
+
+						<div class="card-footer p-0 no-gutters">
+							<a class="text-center col btn btn-dark text-white"
+							href="/product_detail/{{product.id}}" role="button">
+							Show details
+							</a>
+						</div>
+					</div>
+				{% endfor %}
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+
+let rangeMin = 0;
+const range = document.querySelector(".range-selected");
+const rangeInput = document.querySelectorAll(".range-input input");
+const rangePrice = document.querySelectorAll(".range-price input");
+
+rangeInput.forEach((input) => {
+	input.addEventListener("input", (e) => {
+	  let minRange = parseInt(rangeInput[0].value);
+	  let maxRange = parseInt(rangeInput[1].value);
+	  if (maxRange - minRange < rangeMin) {     
+		if (e.target.className === "min") {
+		  rangeInput[0].value = maxRange - rangeMin;        
+		} else {
+		  rangeInput[1].value = minRange + rangeMin;        
+		}
+	  } else {
+		rangePrice[0].value = minRange;
+		rangePrice[1].value = maxRange;
+		range.style.left = (minRange / rangeInput[0].max) * 100 + "%";
+		range.style.right = 100 - (maxRange / rangeInput[1].max) * 100 + "%";
+	  }
+	});
+  });
+
+rangePrice.forEach((input) => {
+	input.addEventListener("input", (e) => {
+		let minPrice = rangePrice[0].value;
+		let maxPrice = rangePrice[1].value;
+		if (maxPrice - minPrice >= rangeMin && maxPrice <= rangeInput[1].max) {
+		if (e.target.className === "min") {
+			rangeInput[0].value = minPrice;
+			range.style.left = (minPrice / rangeInput[0].max) * 100 + "%";
+		} else {
+			rangeInput[1].value = maxPrice;
+			range.style.right = 100 - (maxPrice / rangeInput[1].max) * 100 + "%";
+		}
+		}
+	});
+	});
+
+
+</script>
+
+{% endblock %}

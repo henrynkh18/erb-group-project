@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% load static %}
+{% load humanize %}
+{% load cart %}
+{% load custom_filter %}
+{% load static %} 
+
+<head> 
+  <link rel="stylesheet" href="{% static 'css/quiz.css' %}">
+</head>
+
+<!-- body -->
+
+<div class="container bg-light  pb-5">
+
+  <div class="jumbotron jumbotron-fluid rounded bg-dark mt-sm-5 my-1">
+      <div class="question ml-sm-5 pl-sm-5 pt-2" style="min-height: 300px;">
+          <div>
+            {% if pk == null %}
+                <h2 class="display-4 text-white">Welcome to style Quiz</h2>
+
+            {% elif pk == 1 %}
+                <h2 class="text-white">Q1. What is your gender?</h2> 
+
+            {% elif pk == 2 %}
+                <h2 class="text-white">Q2. Your height & weight?</h2>
+                
+            {% elif pk == 3 %}
+                <h2 class="text-white">Q3. Your favourite color?</h2>
+                
+            {% elif pk == 4 %}
+                <h2 class="text-white">Q4. What sport type of product?</h2>
+
+            {% elif pk == 5 %}
+                <h2 class="text-white">Q5. What Category?</h2>
+                
+            {% elif pk == 6 %}
+                <h2 class="text-white">Q6. Price range</h2>
+
+            {% elif pk == 7 %}
+                <h2 class="text-white">Q7. Fit size?</h2>
+                
+            {% endif %}
+            <hr>
+        </div>
+        {% if pk == 1 %}
+            <form id="genderform" method="post" action="">
+                {% csrf_token %}
+                {% for field in form1 %}
+                    {{field}}
+                {% endfor %}
+            </form>
+
+        {% elif pk == 2 %} 
+            <form id="heightweightform" method="post" action="">
+                {% csrf_token %}
+                {{ form2.as_p }}
+            </form>
+
+        {% elif pk == 3 %} 
+            <form id="colorform" method="post" action="">
+                {% csrf_token %}
+                {% for field in form3 %}
+                    {{field}}
+                {% endfor %}
+            </form>
+
+        {% elif pk == 4 %}        
+            <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3" id="options">
+                <form id="sportform" method="post" action="">
+                    <fieldset>
+                    {% csrf_token %}
+                    {% for sport in sports %}
+                        <label class="options">{{sport.name}}
+                            <input type="radio" name="sportoption" value="{{sport.id}}">
+                            <span class="checkmark"></span>
+                        </label>
+                    {% endfor %}
+                    </fieldset>
+                </form>
+            </div>
+
+        {% elif pk == 5 %}        
+            <div class="ml-md-3 ml-sm-3 pl-md-5 pt-sm-0 pt-3">
+                <form id="categoryform" method="post" action="">
+                    {% csrf_token %}
+                    {% for category in categorys %}
+
+                        <input style="width: 40px; height: 40px;" type="checkbox" name="catoption" 
+                                value="{{category.id}}" id="{{category.id}}" checked/>
+                        <label class="options" for="{{category.id}}">{{category.name}}</label><br>
+                    {% endfor %}
+                </form>
+            </div>
+        
+        {% endif %}
+      </div>
+      <div class="d-flex align-items-center pt-3">
+        <hr>
+        {% if pk == 1 %} 
+            <div class="mr-auto pl-5 pr-5" id="prev">
+                <a class="text-center col btn btn-primary"
+                    role="button"
+                    href="/stylequiz/">
+                    Previous
+                </a>
+            </div>
+        {% elif pk > 1 %}
+            <div class="mr-auto pl-5 pr-5" id="prev">
+                <a class="text-center col btn btn-primary"
+                    role="button"
+                    href="/stylequiz/{{pk|minus:1}}">
+                    Previous
+                </a>
+            </div>
+        {% endif %}   
+         
+        {% if pk == 1 %} 
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <input class="text-center col btn btn-primary" 
+                type="submit" form="genderform" value="Next"/>
+            </div>
+        
+        {% elif pk == 2 %}
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <input class="text-center col btn btn-primary" 
+                type="submit" form="heightweightform" value="Next"/>
+            </div>
+
+        {% elif pk == 3 %}
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <input class="text-center col btn btn-primary" 
+                type="submit" form="colorform" value="Next"/>
+            </div>    
+
+        {% elif pk == 4 %}
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <input class="text-center col btn btn-primary" 
+                type="submit" form="sportform" value="Next"/>
+            </div>  
+        
+        {% elif pk == 5 %}
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <input class="text-center col btn btn-primary" 
+                type="submit" form="categoryform" value="Next"/>
+            </div>  
+
+        {% elif pk == null or pk < 7 %} 
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <a class="text-center col btn btn-primary"
+                    role="button"
+                    href="/stylequiz/{{pk|add:1}}">
+                    Next   
+                </a>
+            </div>
+        {% elif pk == 7 %} 
+            <div class="ml-auto pl-5 pr-5" id="next">
+                <a class="text-center col btn btn-danger"
+                    role="button"
+                    href="#">
+                    Finish!   
+                </a>
+            </div>
+      {% endif %}  
+
+      </div>
+  </div>
+
+</div>
+
+
+{% endblock %}
